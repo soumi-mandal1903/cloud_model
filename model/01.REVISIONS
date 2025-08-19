@@ -1,0 +1,94 @@
+00May07: 
+       - Added subcloud kludge for stability in Marley rad xfer.
+       - Also added <hack_q2> to init_optics() to force conservative
+         geometric scattering over the single wavelength bin.
+00May09: 
+       - Fixed find_root() convergence criterio, and added some
+         parameters to argument list of eddysed().
+00Jun14: 
+       - Added calculation of <lapse_ratio> in subroutines reading 
+         atmospheric profiles, now used to calculate mixing length scale
+         in eddysed() -- no longer assuming equal to scale height.
+00Jun28: 
+       - Now actually using the modified mixing length scale (oops).
+00Jul13: 
+       - Now solving for advective-diffusive total condensate mixing ratio
+         (qt) using find_root(), a significant improvement over iterative 
+         method previously used (for instance, find_root() method is 
+         mathematically defensible, whereas iterative method was based
+         strictly on seat-of-the-pants intuition, and behaved undesirably
+         when precipitation overwhelmed diffusion).
+00Jul14: 
+       - Added pvap_() routines for CH4, NH3, and KCl, and added hooks in
+         main(), eddysed(), and init_optics().  Need sub-cloud mixing ratios
+         (solar abundances -- get from Lodders and Fegley?) and optical
+         constants and particle densities for ices (presently using values
+         for liquids).
+v_1.0:   
+       - Added <do_optics> switch -- when .false. only calculate optical depth
+         for geometric scatterers.
+v_1.01:  
+       - Computation of <alpha> (exponent in vfall ~ r^alpha) now between
+         rw/sig and rw for moment_rw == R_VA and R_F1, since bulk of
+         precipitation is at r > rw for those cases: this change decreases 
+         <alpha> and <rainf> and increases <reff> and <opd>.
+       - Also added data from Voyager sounding to input files and added
+         read_voyager.f to read it.  
+v_2:     
+       - Removed <moment_rw> nonsense -- instead, <rainf> is now an input
+         parameter.  Also, corrected error in computation of <reff> --
+         exponential argument is 5*lnsig2, not 6*lnsig2.  Now <do_optics>
+         and <read_mie> initialized in main() and passed to init_optics().
+       - Note that argument list to eddysed() has also changed to keep
+         order of inputs then outputs.
+v_2.1    
+       - Added in-cloud supersaturation as input parameter to eddysed().
+       - Also fixed anomalous values of <alpha> for monodisperse 
+         distributions, for which <sig> ~ 1,0 by introducing new 
+         variable to eddysed(): <sig_alpha> = max( 1.1, <sig> ).
+v_2.2    
+       - New fall velocity algorithm -- fit Cd(Re) from 24(1) to 0.45(1000).
+v_2.3    
+       - New viscosity formulation (Rosner, 2000, Dover).
+v_2.4    
+       - After thwarted attempt to include latent heat flux, the only
+         change is slight modification of kz from Gierasch and Conrath (1985).
+v_2.5   
+       - Adaptive mesh refinement: increase refinement of grid at each layer
+         until optical depth for conservative scatterers converges.
+       - Also added computation of fractional cloud overage.
+v_2.6   
+       - Removed spurious warning flags from find_root() -- now only
+         report problems for final solution (at finest resolution).
+       - Fixed bad computation of cloud-average effective radius;
+         was using lwp (vertical path of condensate) and optical depth,
+         but had omitted particle density in denominator of optical depth.
+       - Also ran calculations for Jupiter ammonia cloud w/ do_subcloud = F.
+v_2.7   
+       - Fixed find_root() to set appropriate default values before
+         possibly returning with status != 0
+v_2.8   
+       - Added computation of condensation temperature (dew point).
+       - Added number of levels as parameter in input profiles.
+v_2.9
+       - First attempt at adding virtual layer 0 to adjust for saturated 
+         bottom layer.
+v_3.0
+       - Reorganized awkward directory structure (no more run/ subdirectory).
+       - First attempt at virtual layer does not withstand testing: 
+         first step, created subroutine cloud_layer() to handle iterating 
+         over sublayers.
+       - Virtual layer now satisfies test (optical depth in original domain
+         does not change when bottom of model is extended to cloud base).
+       - Added Al2O3 as another condensate.  Optical constants not in
+         format consistent with H2O, Fe, and MgSiO3.
+v_3.1  
+        - Ripped apart and rewrote data passing -- now loading into common
+          blocks is localized to right before calling find_root().
+        - Created new scattering coefficients from latest set of optical 
+          properties for NH3, H2O, Fe, MgSiO3, and Al2O3.
+v_3.1
+        - Modified init_optics() to read new Marley format of optical 
+          properties.
+v_3.2
+        - Added option to turn off decrease of mixing ratio below cloud base.
