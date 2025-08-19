@@ -92,7 +92,7 @@ class CloudLayerCalculator:
             sig_alpha = max(1.1, sig_layer)
 
 
-            # Compute alpha nhn
+            # Compute alpha 
             if rainf_layer > 1:
                 alpha = np.log(
                     self.vfall(rw_layer * sig_alpha, grav, mw_atmos, mfp, visc, t_layer, p_layer, rho_p) / w_convect
