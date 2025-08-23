@@ -1,4 +1,3 @@
-# plot_voyager.py
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -24,12 +23,17 @@ def read_voyager(fname):
 def main():
     p_bar, qc = read_voyager(INPUT)
 
-    # Sort by pressure (just in case). Many profiles are top->bottom or bottom->top.
-    order = np.argsort(p_bar)   # ascending pressure
+    # Sort by pressure (just in case).
+    order = np.argsort(p_bar)
     p_bar = p_bar[order]
     qc = qc[order]
 
-    # Prepare masked log10(qc) (mask zeros and negative values)
+    # Apply mask: only keep 0.1 <= p <= 1 bar
+    mask = (p_bar >= 0.1) & (p_bar <= 1.0)
+    p_bar = p_bar[mask]
+    qc = qc[mask]
+
+    # Prepare masked log10(qc) (mask zeros and negatives)
     qc_positive = qc > 0.0
     logqc = np.full_like(qc, np.nan)
     logqc[qc_positive] = np.log10(qc[qc_positive])
@@ -40,7 +44,8 @@ def main():
     ax = axes[0]
     ax.plot(qc, p_bar, marker='o', linestyle='-', markersize=4)
     ax.invert_yaxis()
-    ax.set_yscale('log')  # log scale for pressure
+    ax.set_yscale('log')
+    ax.set_ylim(1.0, 0.1)  # restrict y-axis between 0.1 and 1 bar
     ax.set_xlabel('qc (g/g)')
     ax.set_ylabel('Pressure (bar)')
     ax.set_title('qc vs Pressure (linear)')
@@ -53,16 +58,18 @@ def main():
                 markersize=4)
         ax.set_xlabel('log10(qc)')
         ax.set_title('log10(qc) vs Pressure (qc>0)')
+        ax.set_ylim(1.0, 0.1)
+        ax.set_yscale('log')
     else:
-        ax.text(0.5, 0.5, 'No positive qc values to plot (all zeros)', ha='center')
+        ax.text(0.5, 0.5, 'No positive qc values in range (0.1–1 bar)', ha='center')
         ax.set_xlabel('log10(qc)')
         ax.set_title('log10(qc) vs Pressure')
     
     ax.grid(True)
 
     plt.tight_layout()
-    plt.savefig("voyager_qc_profile.png", dpi=200)
-    print("Saved figure to voyager_qc_profile.png")
+    plt.savefig("voyager_qc_profile_masked.png", dpi=200)
+    print("Saved figure to voyager_qc_profile_masked.png")
     plt.show()
 
 if __name__ == "__main__":
