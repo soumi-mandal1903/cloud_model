@@ -55,7 +55,7 @@ class MainCases:
         ncases = self.NCASE if do_cases else 1
 
         # Optics setup
-        do_optics = True
+        do_optics =   True
         read_mie = False
         optics_init = OpticsInitializer()
         optics_result = optics_init.init_optics(do_optics, read_mie, ngas, gas_name)
