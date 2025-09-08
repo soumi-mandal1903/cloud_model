@@ -1,63 +1,52 @@
-import numpy as np
-
-import numpy as np
-
-def find_root(func, y, xlow, xhigh, delta, max_iter=50, epsilon=1e-7):
+def find_root(f, y, xlow, xhigh, delta):
     """
-    Secant root finder for solving func(x) - y = 0 between [xlow, xhigh].
+    Secant method root finder solving f(x) - y = 0 between [xlow, xhigh].
 
-    Parameters
-    ----------
-    func : callable
-        Function f(x).
-    y : float
-        Target value, solve for f(x) = y.
-    xlow, xhigh : float
-        Bracketing interval for root.
-    delta : float
-        Convergence tolerance for |f(x)-y|.
-    max_iter : int
-        Maximum iterations (default 50).
-    epsilon : float
-        Convergence tolerance for relative x changes.
-
-    Returns
-    -------
-    xnew : float
-        Estimated root.
-    status : int
-        0 = success
-        1 = max iterations reached without convergence
-       -1 = root not bracketed initially
+    Returns:
+        xnew: estimated root
+        status: 0 = success
+                1 = max iterations reached without convergence
+               -1 = root not bracketed initially
     """
-    x1, x2 = xlow, xhigh
-    f1 = func(x1) - y
-    f2 = func(x2) - y
+    MAX_ITER = 50
+    EPSILON = 1e-7
 
-    # Default return values
-    xnew, fnew = x1, f1
+    # copy input range
+    x1 = xlow
+    x2 = xhigh
 
-    # Abort if not bracketed
+    # evaluate function at endpoints
+    f1 = f(x1) - y
+    f2 = f(x2) - y
+
+    # default return values
+    xnew = x1
+    fnew = f1
+
+    # abort if root not bracketed
     if f1 * f2 > 0:
-        return xnew, -1
+        status = -1
+        return xnew, status
 
     iter_count = 0
-    while abs(fnew) > delta and iter_count < max_iter and abs(x2 / x1 - 1.0) > epsilon:
-        # Secant step
+    while abs(fnew) > delta and iter_count < MAX_ITER and (x2 / x1 - 1.0) > EPSILON:
+        # secant estimate
         slope = (f2 - f1) / (x2 - x1)
         xnew = x1 - f1 / slope
-        fnew = func(xnew) - y
+        fnew = f(xnew) - y
 
-        # Update bracket
-        if fnew * f1 <= 0 and abs(x2 / xnew - 1.0) > epsilon:
-            x2, f2 = xnew, fnew
+        # update bracket
+        if fnew * f1 <= 0 and (x2 / xnew - 1.0) > EPSILON:
+            x2 = xnew
+            f2 = fnew
         else:
-            x1, f1 = xnew, fnew
+            x1 = xnew
+            f1 = fnew
 
         iter_count += 1
 
-    # Status flag
-    if iter_count == max_iter and abs(x2 / x1 - 1.0) > epsilon:
+    # determine status
+    if iter_count == MAX_ITER and (x2 / x1 - 1.0) > EPSILON:
         status = 1
     else:
         status = 0

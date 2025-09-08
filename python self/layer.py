@@ -1,47 +1,20 @@
 # layer.py
 import numpy as np
-from advdiff import advdiff
+from advdiff import AdvDiff
 from find_root import find_root
 
 def layer(qt_guess, qvs, qbelow, mixl, dz, rainf, delta=1e-8):
     """
-    Python port of the Fortran `layer` subroutine.
-
-    Parameters
-    ----------
-    qt_guess : float
-        Initial guess for total mixing ratio (g/g)
-    qvs : float
-        Saturation mixing ratio (g/g)
-    qbelow : float
-        Vapor mixing ratio in underlying layer (g/g)
-    mixl : float
-        Convective mixing length (cm)
-    dz : float
-        Layer thickness (cm)
-    rainf : float
-        Rain efficiency factor
-    delta : float
-        Convergence tolerance
-
-    Returns
-    -------
-    qc : float
-        Condensed condensate mixing ratio (g/g)
-    qt : float
-        Total mixing ratio (g/g)
-    status : int
-        Root-finding status flag
+    Compute condensate in a single layer using AdvDiff class.
     """
 
-    # Store state in globals for advdiff (matches Fortran COMMON block)
-    from advdiff import set_advdiff_params
-    set_advdiff_params(qbelow, qvs, mixl, dz, rainf)
+    # Create an AdvDiff object for this layer
+    adv = AdvDiff(ad_qbelow=qbelow, ad_qvs=qvs, ad_mixl=mixl, ad_dz=dz, ad_rainf=rainf)
 
-    # Define wrapper for root finding
-    f = lambda qt: advdiff(qt)
+    # Define root-finding wrapper
+    f = lambda qt: adv.compute(qt)[0]  # return advdiff_val only
 
-    # Bracket search range: must enclose solution
+    # Bracket search range
     qmin = max(qvs, 1e-12)
     qmax = max(qt_guess * 2.0, qmin * 2.0)
 
