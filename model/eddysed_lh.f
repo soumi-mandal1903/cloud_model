@@ -293,7 +293,7 @@ c   range of mixing ratios to search (g/g)
 c   precision of advective-diffusive solution (g/g)
             delta_q = qbelow / 1000.
 
-c   Find total condensate mixing ratio for layer
+c   Find total condensate mixing ratio for layer_
 
             call find_root( advdiff, ZERO, qlo, qhi, delta_q, 
      $        qt(iz,igas), status )
@@ -338,7 +338,7 @@ c   For cloudy layers, w_convect is solved from a cubic equation.
       print*,'cubic_arg=',cubic_arg
           w_convect = ( -coeff_b/2. + sqrt( cubic_arg ) )**(1./3.)
      $              + ( -coeff_b/2. - sqrt( cubic_arg ) )**(1./3.)
-        endif
+        endif_
 c dbg
       if( lh_sum .gt. 0. )then
       igas = 1
