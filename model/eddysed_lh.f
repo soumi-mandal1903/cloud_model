@@ -380,7 +380,7 @@ c   precision of vfall solution (cm/s)
 
             call find_root( vfall, w_convect, rlo, rhi, delta_v, 
      $        rw(iz,igas), status )
-
+)/(2.2*
             if( status .ne. 0 )then
               write(*,'(a,i3,3a,i4,1p2e10.3)')
      $          'find_root(vfall) status = ',status,
