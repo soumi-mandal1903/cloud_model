@@ -1,0 +1,8 @@
+Diagnostics for eddysed_lh
+kz: nans=0, infs=0, min=0.0, max=269663327385.13513
+qt: nans=0, infs=0, min=0.0, max=0.000134
+qc: nans=0, infs=0, min=0.0, max=6.198969517533058e-05
+ndz: nans=0, infs=0, min=0.0, max=28.152965534395083
+rg: nans=0, infs=0, min=0.0, max=0.0002457852418828806
+reff: nans=0, infs=0, min=0.0, max=0.0002457852418828806
+rw: nans=0, infs=0, min=0.0, max=0.0002457852418828806
