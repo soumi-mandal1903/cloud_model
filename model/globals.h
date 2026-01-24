@@ -3,7 +3,7 @@ c   declare global storage for eddysed and jacket routine
 
 c     maximum number of layers
       integer MAXNZ
-      parameter( MAXNZ = 50 )
+      parameter( MAXNZ = 313 )
 
 c     maximum number of condensing gases
       integer MAXNGAS

@@ -12,8 +12,10 @@
 .SUFFIXES:   .h .f .o
 
 #.f.o:	;	f77 -N32 -f -q -g -c $(<)
-%.o: %.f	;	
-#		g77 -ff90 -g -c $*.f
+# %.o: %.f	;	
+# #		g77 -ff90 -g -c $*.f
+# 	gfortran -g -c $*.f
+%.o: %.f ;
 	gfortran -g -c $*.f
 
 # define a string identifying version of model
@@ -23,7 +25,8 @@ VERSION = '3.2'
 # object files that are linked together to create executable "eddy"
 # in parent directory
 
-OFILES=		main.o \
+OFILES=		driver.o \
+		main.o \
 		advdiff.o \
 		calc_optics.o \
 		calc_qc.o \
@@ -76,12 +79,14 @@ tar:		;
 
 # clean things up
 
-clean:		;
-		rm *.o ../eddy
+# clean:		;
+# 		rm *.o ../eddy
+clean: ;
+		rm -f *.o ../eddy
 
 
 # dependency list for object files
-
+driver.o:	driver.f	globals.h
 main.o:		main.f		globals.h
 advdiff.o:	advdiff.f	globals.h
 calc_optics.o:	calc_optics.f	globals.h
